@@ -3,10 +3,12 @@
   command: docker -v
   register: docker_check
   ignore_errors: yes
+  no_log: true
   failed_when: docker_check.rc != 0
 
 - name: check docker-compose existed
   command: docker-compose -v
   register: docker_compose_check
   ignore_errors: yes
+  no_log: true
   failed_when: docker_compose_check.rc != 0

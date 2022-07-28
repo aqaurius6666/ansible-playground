@@ -1,11 +1,13 @@
 ---
-# - include: install_docker.yml
-# - include: install_docker-compose.yml
-- include: pre_run.yml
-- include: install_docker_distro_amz.yml
-  when: ansible_distribution == "Amazon" and docker_check.rc != 0
-- include: install_docker.yml
-  when: ansible_distribution != "Amazon" and docker_compose_check.rc != 0
+- include_tasks: pre_run.yml
 
-- include: after_install_docker.yml
-- include: install_docker_compose.yml
+- include_tasks: install_docker.yml
+  name: install docker
+  when: docker_check.failed
+
+- include_tasks: install_docker_compose.yml
+  name: install docker compose
+  when: docker_compose_check.failed
+
+- include_tasks: after_install_docker.yml
+- include_tasks: install_docker_compose.yml

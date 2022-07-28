@@ -1,12 +1,17 @@
 ---
-- name: start docker service
-  ansible.builtin.systemd:
-    name: docker
-    state: started
 - name: enable docker service
+  become: true
+  become_method: sudo
   ansible.builtin.systemd:
     name: docker
     enabled: yes
+
+- name: start docker service
+  become: true
+  become_method: sudo
+  ansible.builtin.systemd:
+    name: docker
+    state: started
 
 - name: add user to group docker
   become: true
