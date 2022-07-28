@@ -1,0 +1,16 @@
+---
+
+- name: create install_docker-compose.sh
+  template: 
+    src: install_docker-compose.sh.j2 
+    dest: /tmp/install_docker-compose.sh
+
+- name: install docker-compose
+  become: true
+  become_method: sudo
+  command: bash /tmp/install_docker-compose.sh
+
+- name: chmod docker-compose
+  become: true
+  become_method: sudo
+  command: chmod +x /usr/local/bin/docker-compose

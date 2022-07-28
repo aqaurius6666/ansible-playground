@@ -1,0 +1,12 @@
+---
+- name: check docker existed
+  command: docker -v
+  register: docker_check
+  ignore_errors: yes
+  failed_when: docker_check.rc != 0
+
+- name: check docker-compose existed
+  command: docker-compose -v
+  register: docker_compose_check
+  ignore_errors: yes
+  failed_when: docker_compose_check.rc != 0

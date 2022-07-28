@@ -1,0 +1,6 @@
+---
+- name: install docker
+  become: true
+  become_method: sudo
+  command: echo y | amazon-linux-extras install docker
+

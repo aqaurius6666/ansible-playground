@@ -1,0 +1,6 @@
+---
+
+- name: install docker, docker compose to all
+  hosts: aws
+  roles:
+    - docker
