@@ -1,2 +1,5 @@
 [aws]
-# 13.215.51.227 ansible_user=ubuntu
+54.169.82.13 ansible_user=ec2-user
+
+# [localhost]
+# localhost ansible_user=aqaurius6666

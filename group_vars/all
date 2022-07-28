@@ -1,0 +1,10 @@
+---
+zshrc_url: https://gist.githubusercontent.com/aqaurius6666/3372042b3b88374834c0fdb7b6b0a325/raw/8a2c6a99704fbf8b89b1e6a88a1501ac2b5b14c5/.zshrc
+
+zsh_plugins:
+  - zsh-autosuggestions
+  - zsh-syntax-highlighting
+
+common_package: 
+  - git
+  - curl

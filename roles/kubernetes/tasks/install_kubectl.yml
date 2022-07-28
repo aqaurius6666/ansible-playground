@@ -1,0 +1,17 @@
+---
+
+- name: get stable version
+  command: curl -L -s https://dl.k8s.io/release/stable.txt
+  register: kubectl_stable_version
+- debug: var=kubectl_stable_version
+
+- name: download kubectl binary
+  command: curl -LO "https://dl.k8s.io/release/{{ kubectl_stable_version.stdout }}/bin/linux/amd64/kubectl" -o /tmp/kubectl
+  when: kubectl_stable_version.rc == 0
+  register: kubectl_download
+
+- name: install kubectl
+  become: true
+  become_method: sudo
+  command: install -o root -g root -m 0777 kubectl /usr/local/bin/kubectl
+  when: kubectl_download.rc == 0

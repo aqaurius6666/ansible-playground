@@ -1,0 +1,29 @@
+---
+
+- name: install necessary 
+  become: true
+  become_method: sudo
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ common_package }}"
+  when: ansible_distribution == "Amazon"
+
+- name: install necessary
+  become: true
+  become_method: sudo
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ common_package }}"
+  when: ansible_distribution == "Ubuntu"
+
+- name: install necessary-2
+  become: true
+  become_method: sudo
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - util-linux-user
+  when: ansible_distribution == "Amazon"

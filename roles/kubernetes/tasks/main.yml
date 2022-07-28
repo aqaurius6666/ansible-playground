@@ -1,0 +1,8 @@
+---
+- include_tasks: pre_run.yml
+
+- include_tasks: install_kubectl.yml
+  when: kubectl_check.failed
+
+- include_tasks: install_helm.yml
+  when: helm_check.failed

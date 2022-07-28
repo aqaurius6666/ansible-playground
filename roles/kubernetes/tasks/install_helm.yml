@@ -1,0 +1,15 @@
+---
+
+- name: download helm install
+  command: curl -fsSL -o /tmp/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+  register: helm_download
+
+- name: change execute mode
+  become: true
+  become_method: sudo
+  command: chmod +x /tmp/get_helm.sh
+  when: helm_download.rc == 0
+
+- name: install helm
+  command: /tmp/get_helm.sh
+  when: helm_download.rc == 0

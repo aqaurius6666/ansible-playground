@@ -1,6 +1,16 @@
 ---
 
-- name: install docker, docker compose to all
+# - name: install docker, docker compose to all
+#   hosts: aws
+#   roles:
+#     - docker
+- name: install common
+  hosts: all
+  roles:
+    - common
+
+    
+- name: install kubernetes tools
   hosts: aws
   roles:
-    - docker
+    - zsh
