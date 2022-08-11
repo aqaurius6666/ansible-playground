@@ -1,0 +1,26 @@
+---
+- name: check libssl installed
+  command: openssl version
+  register: openssl_check
+  ignore_errors: yes
+  no_log: true
+  failed_when: openssl_check.rc != 0
+
+- name: download
+  when: openssl_check.failed
+  ansible.builtin.get_url:
+    url: http://security.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5.10_amd64.deb
+    dest: /tmp/libssl1.0.0_1.0.2n-1ubuntu5.10_amd64.deb
+    mode: '0440'
+  
+- name: download 2
+  when: openssl_check.failed
+  ansible.builtin.get_url:
+    url: http://security.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0-dev_1.0.2n-1ubuntu5.10_amd64.deb
+    dest: /tmp/libssl1.0-dev_1.0.2n-1ubuntu5.10_amd64.deb
+    mode: '0440'
+- name: install
+  when: openssl_check.failed
+  become: true
+  become_method: sudo
+  command: dpkg -i /tmp/libssl1.0.0_1.0.2n-1ubuntu5.10_amd64.deb /tmp/libssl1.0-dev_1.0.2n-1ubuntu5.10_amd64.deb

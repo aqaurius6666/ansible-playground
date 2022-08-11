@@ -4,13 +4,27 @@
 #   hosts: aws
 #   roles:
 #     - docker
-- name: install common
-  hosts: all
-  roles:
-    - common
+# - name: install common
+#   hosts: all
+#   roles:
+#     - common
 
     
 - name: install kubernetes tools
   hosts: aws
   roles:
-    - zsh
+    - kubernetes
+
+- name: azure agent
+  hosts: all
+  roles:
+    - common
+    - vpn
+    - kubernetes
+    - azure-agent
+
+# - name: vpn
+#   hosts: all
+#   roles:
+#     - vpn
+

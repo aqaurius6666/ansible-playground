@@ -1,0 +1,50 @@
+---
+- name: check openvpn
+  command: openvpn --version
+  register: openvpn_check
+  ignore_errors: yes
+  no_log: true
+  failed_when: openvpn_check.rc != 0
+
+- name: install openvpn if not existed
+  become: true
+  become_method: sudo
+  apt:
+    name: openvpn
+    state: latest
+  when: ansible_distribution == 'Ubuntu' and openvpn_check.failed
+
+- name: edit openvpn file
+  template:
+    src: openvpn.j2
+    dest: /etc/default/openvpn
+  become: true
+  become_method: sudo
+
+- name: create openvpn config
+  template: 
+    src: ansible.conf.j2 
+    dest: "/etc/openvpn/ansible.conf"
+  become: true
+  become_method: sudo
+
+- name: enable openvpn service
+  become: true
+  become_method: sudo
+  ansible.builtin.systemd:
+    name: openvpn
+    enabled: yes
+
+- name: start openvpn service
+  become: true
+  become_method: sudo
+  ansible.builtin.systemd:
+    name: openvpn
+    state: stopped
+
+- name: start openvpn service
+  become: true
+  become_method: sudo
+  ansible.builtin.systemd:
+    name: openvpn
+    state: started

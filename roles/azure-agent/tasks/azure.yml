@@ -1,0 +1,51 @@
+---
+- name: check agent directory existed
+  command: stat "{{ ansible_env.HOME }}/{{ agent_name }}"
+  register: agent_directory_existed
+  ignore_errors: yes
+  no_log: true
+  failed_when: agent_directory_existed.rc != 0
+
+- name: create agent directory
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/{{ agent_name }}"
+    state: directory
+    mode: '0777'
+  when: agent_directory_existed.failed
+
+- name: check_binary_existed
+  command: stat /tmp/vsts-agent-linux.tar.gz
+  register: binary_check
+  ignore_errors: yes
+  no_log: true
+  failed_when: binary_check.rc != 0
+
+- name: download file
+  command: curl http://{{ azure_host }}/_apis/public/distributedtask/downloads/agents/{{ agent_binary }}.tar.gz --output /tmp/vsts-agent-linux.tar.gz
+  when: binary_check.failed
+
+- name: tar
+  command: chdir="{{ ansible_env.HOME }}/{{ agent_name }}" tar zxvf /tmp/vsts-agent-linux.tar.gz
+  when: agent_directory_existed.failed
+
+- name: config agent
+  ignore_errors: yes
+  command: chdir="{{ ansible_env.HOME }}/{{ agent_name }}" ./config.sh  --unattended --url https://{{ azure_host }} --auth pat --token {{ azure_pat_token }} --pool {{ agent_pool }} --agent {{ agent_name }} --acceptTeeEula --sslskipcertvalidation
+
+- name: uninstall agent
+  command: chdir="{{ ansible_env.HOME }}/{{ agent_name }}" ./svc.sh uninstall
+  become: true
+  become_method: sudo
+  ignore_errors: yes
+  when: agent_directory_existed.failed == false 
+
+- name: install agent
+  command: chdir="{{ ansible_env.HOME }}/{{ agent_name }}" ./svc.sh install
+  become: true
+  ignore_errors: yes
+  become_method: sudo
+
+- name: run agent
+  command: chdir="{{ ansible_env.HOME }}/{{ agent_name }}" ./svc.sh start
+  become: true
+  become_method: sudo 

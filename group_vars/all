@@ -8,3 +8,10 @@ zsh_plugins:
 common_package: 
   - git
   - curl
+
+azure_pat_token: '{{ lookup("env", "AZURE_TOKEN") }}'
+azure_host: 10.8.0.6
+# azure_host: uetbc.xyz:8888
+agent_pool: Builder
+agent_name: "{{ ansible_host }}-agent"
+agent_binary: "vsts-agent-linux-x64-2.195.2"

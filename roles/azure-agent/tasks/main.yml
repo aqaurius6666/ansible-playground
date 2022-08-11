@@ -1,0 +1,4 @@
+---
+
+- include_tasks: azure.yml
+  # when: agent_directory_existed.failed

@@ -15,6 +15,7 @@
   apt:
     name: "{{ item }}"
     state: present
+    update_cache: yes
   with_items: "{{ common_package }}"
   when: ansible_distribution == "Ubuntu"
 
@@ -27,3 +28,6 @@
   with_items:
     - util-linux-user
   when: ansible_distribution == "Amazon"
+  
+- include_tasks: install_libssl.yml
+  when: ansible_distribution == "Ubuntu"
