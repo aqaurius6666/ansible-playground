@@ -1,0 +1,20 @@
+---
+- name: check node existed
+  command: node --version
+  register: node_existed
+  ignore_errors: true
+  no_log: true
+  failed_when: node_existed.rc != 0
+
+- name: check nvm existed
+  command: nvm --version
+  register: nvm_existed
+  ignore_errors: true
+  no_log: true
+  failed_when: nvm_existed.rc != 0
+
+- when: node_existed.failed and nvm_existed.failed
+  include_tasks: install_nvm.yml
+
+- when: node_existed.failed
+  include_tasks: install_node.yml

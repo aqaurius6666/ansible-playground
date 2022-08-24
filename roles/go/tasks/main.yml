@@ -1,0 +1,9 @@
+---
+- name: check go existed
+  command: /usr/local/go/bin/go version
+  register: go_check
+  ignore_errors: true
+  failed_when: go_check.rc != 0
+ 
+- include_tasks: install.yml
+  when: go_check.failed

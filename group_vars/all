@@ -15,3 +15,5 @@ azure_host: 10.8.0.6
 agent_pool: Builder
 agent_name: "{{ ansible_host }}-agent"
 agent_binary: "vsts-agent-linux-x64-2.195.2"
+go_version: 1.19
+node_version: lts

@@ -10,21 +10,21 @@
 #     - common
 
     
-- name: install kubernetes tools
-  hosts: aws
-  roles:
-    - kubernetes
+# - name: install kubernetes tools
+#   hosts: aws
+#   roles:
+#     - kubernetes
 
-- name: azure agent
-  hosts: all
-  roles:
-    - common
-    - vpn
-    - kubernetes
-    - azure-agent
-
-# - name: vpn
+# - name: azure agent
 #   hosts: all
 #   roles:
+#     - common
 #     - vpn
+#     - kubernetes
+#     - azure-agent
 
+- name: localhost
+  hosts: localhost
+  roles:
+    - go
+    - nodejs

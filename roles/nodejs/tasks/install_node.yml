@@ -1,0 +1,4 @@
+---
+
+- name: install node using nvm
+  command: nvm install {{ node_version }}
