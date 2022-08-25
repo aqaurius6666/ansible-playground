@@ -1,17 +1,15 @@
 
 ---
 - name: check install existed
-  command: stat /tmp/node_installer.sh
-  register: is_installer_existed
-  ignore_errors: true
-  no_log: true
-  failed_when: is_installer_existed.rc != 0
+  stat:
+    path: /tmp/node_installer.sh
+  register: node_installer
   
 - name: download installer
   command: curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh -o /tmp/node_installer.sh
   register: install_node_installer
   failed_when: install_node_installer.rc != 0
-  when:  is_installer_existed.failed == true
+  when:  not node_installer.stat.exists
 
 - name: run installer
   command: bash /tmp/node_installer.sh

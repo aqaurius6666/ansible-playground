@@ -3,7 +3,6 @@
 - name: get stable version
   command: curl -L -s https://dl.k8s.io/release/stable.txt
   register: kubectl_stable_version
-- debug: var=kubectl_stable_version
 
 - name: download kubectl binary
   command: curl -LO "https://dl.k8s.io/release/{{ kubectl_stable_version.stdout }}/bin/linux/amd64/kubectl" -o /tmp/kubectl

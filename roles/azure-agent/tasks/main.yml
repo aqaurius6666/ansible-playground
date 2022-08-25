@@ -1,4 +1,10 @@
 ---
-
+- name: check reachability to azure host
+  command: ping "{{ azure_host }}" -c 1 -W 2
+  ignore_errors: true
+  no_log: true
+  failed_when: ping_check.rc != 0
+  register: ping_check
 - include_tasks: azure.yml
+  when: not ping_check.failed
   # when: agent_directory_existed.failed

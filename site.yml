@@ -15,16 +15,16 @@
 #   roles:
 #     - kubernetes
 
-# - name: azure agent
-#   hosts: all
-#   roles:
-#     - common
-#     - vpn
-#     - kubernetes
-#     - azure-agent
-
-- name: localhost
-  hosts: localhost
+- name: azure agent
+  hosts: aws
   roles:
-    - go
-    - nodejs
+    - common
+    - vpn
+    - kubernetes
+    - azure-agent
+
+# - name: localhost
+#   hosts: localhost
+#   roles:
+#     - go
+#     - nodejs

@@ -40,11 +40,4 @@
   become_method: sudo
   ansible.builtin.systemd:
     name: openvpn
-    state: stopped
-
-- name: start openvpn service
-  become: true
-  become_method: sudo
-  ansible.builtin.systemd:
-    name: openvpn
-    state: started
+    state: restarted

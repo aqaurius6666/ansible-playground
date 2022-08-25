@@ -1,11 +1,9 @@
 ---
 
 - name: check oh-my-zsh
-  command: stat {{ ansible_env.HOME }}/.oh-my-zsh
-  register: oh_my_zsh_check
-  ignore_errors: yes
-  no_log: true
-  failed_when: oh_my_zsh_check.rc != 0
+  stat:
+    path: {{ ansible_env.HOME }}/.oh-my-zsh
+  register: ohmyzsh_dir
 
 - name: check zsh
   command: which zsh
@@ -28,23 +26,19 @@
   command: apt-get install zsh -y
   when: ansible_distribution == 'Ubuntu' and zsh_check.failed
   
-- name: rm .oh-my-zsh
-  command: rm -rf {{ ansible_env.HOME }}/.oh-my-zsh
-  when: oh_my_zsh_check.failed
-
 - name: get oh-my-zsh installer
   command: curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o /tmp/ohmyzsh-install.sh
-  when: oh_my_zsh_check.failed
+  when: not ohmyzsh_dir.stat.exists
 
 - name: change execute mode
   become: true
   become_method: sudo
   command: chmod +x /tmp/ohmyzsh-install.sh
-  when: oh_my_zsh_check.failed
+  when: not ohmyzsh_dir.stat.exists
 
 - name: install oh-my-zsh
   command: /tmp/ohmyzsh-install.sh
-  when: oh_my_zsh_check.failed
+  when: not ohmyzsh_dir.stat.exists
 
 - name: get .zshrc
   command: curl {{ zshrc_url}} -o {{ ansible_env.HOME }}/.zshrc
