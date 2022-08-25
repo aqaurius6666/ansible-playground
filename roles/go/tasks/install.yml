@@ -20,5 +20,5 @@
 
 - name: untar go
   command: tar -C /usr/local -xzf /tmp/go{{ go_version }}.tar.gz
-  become: true
-  become_method: sudo
+  # become: true
+  # become_method: sudo
