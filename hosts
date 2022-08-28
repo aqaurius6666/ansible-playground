@@ -2,4 +2,4 @@
 44.202.255.238 ansible_user=ubuntu
 
 [local]
-ansible_connection=local ansible_user=aqaurius6666
+localhost ansible_connection=local ansible_user=aqaurius6666

@@ -15,14 +15,18 @@
 #   roles:
 #     - kubernetes
 
-- name: azure agent
-  hosts: aws
-  roles:
-    - common
-    - vpn
-    - kubernetes
-    - azure-agent
+# - name: azure agent
+#   hosts: aws
+#   roles:
+#     - common
+#     - vpn
+#     - kubernetes
+#     - azure-agent
 
+- name: install local
+  hosts: local
+  roles:
+    - open-faas
 # - name: localhost
 #   hosts: localhost
 #   roles:
