@@ -1,0 +1,21 @@
+---
+
+- name: check if dart existed
+  command: dart --version
+  register: dart_check
+  ignore_errors: yes
+  no_log: true
+  failed_when: dart_check.rc != 0
+
+- name: check if flutter existed
+  command: flutter --version
+  register: flutter_check
+  ignore_errors: yes
+  no_log: true
+  failed_when: flutter_check.rc != 0
+
+- include_tasks: install_dart.yaml
+  when: dart_check.failed
+
+- include_tasks: install_flutter.yaml
+  when: flutter_check.failed

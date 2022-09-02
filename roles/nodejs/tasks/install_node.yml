@@ -1,4 +1,5 @@
 ---
 
 - name: install node using nvm
-  command: nvm install {{ node_version }}
+
+  shell: "{{ ansible_env.HOME }}/.nvm/nvm.sh install {{ node_version }}"

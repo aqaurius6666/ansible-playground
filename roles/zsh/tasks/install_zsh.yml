@@ -2,7 +2,7 @@
 
 - name: check oh-my-zsh
   stat:
-    path: {{ ansible_env.HOME }}/.oh-my-zsh
+    path: "{{ ansible_env.HOME }}/.oh-my-zsh"
   register: ohmyzsh_dir
 
 - name: check zsh

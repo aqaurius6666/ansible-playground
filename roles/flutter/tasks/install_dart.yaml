@@ -1,0 +1,16 @@
+---
+- name: check if dart deb existed
+  stat:
+    path: /tmp/dart.deb
+  register: dart_deb_check
+
+- name: download deb
+  command: curl -o /tmp/dart.deb https://storage.googleapis.com/dart-archive/channels/stable/release/{{ dart_version }}/linux_packages/dart_{{ dart_version }}-1_amd64.deb
+  when: not dart_deb_check.stat.exists
+
+- name: install dart
+  apt:
+    deb: /tmp/dart.deb
+    state: present
+  become: true
+  become_method: sudo

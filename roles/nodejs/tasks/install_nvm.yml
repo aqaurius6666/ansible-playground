@@ -13,3 +13,6 @@
 
 - name: run installer
   command: bash /tmp/node_installer.sh
+
+- name: change mode
+  command: chmod +x {{ ansible_env.HOME }}/.nvm/nvm.sh

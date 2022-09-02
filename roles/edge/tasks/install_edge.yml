@@ -1,0 +1,17 @@
+---
+
+- name: check if edge installer existed
+  stat:
+    path: /tmp/microsoft-edge-stable_{{ edge_version }}.deb
+  register: edge_installer_check
+
+
+- name: download edge deb
+  command: curl -L https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/microsoft-edge-stable_{{ edge_version }}.deb -o /tmp/microsoft-edge-stable_{{ edge_version }}.deb
+  when: not edge_installer_check.stat.exists
+
+- name: install edge deb
+  apt:
+    deb: /tmp/microsoft-edge-stable_{{ edge_version }}.deb
+  become: true
+  become_method: sudo

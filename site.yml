@@ -25,10 +25,15 @@
 
 - name: install local
   hosts: local
-  roles:
-    - open-faas
+  # roles:
+  #   - flutter
 # - name: localhost
 #   hosts: localhost
-#   roles:
-#     - go
-#     - nodejs
+  roles:
+    # - edge
+    # - common
+    # - zsh
+    # - go
+    - nodejs
+    - docker
+

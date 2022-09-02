@@ -1,0 +1,15 @@
+---
+- name: check if minikube installer existed
+  stat:
+    path: /tmp/minikube
+  register: minikube_installer_check
+
+- name: download minikube installer
+  command: curl -L -o /tmp/minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+  when: not minikube_installer_check.stat.exists
+  register: minikube_download
+
+- name: install minikube
+  command: install /tmp/minikube /usr/local/bin/minikube
+  become: true
+  become_method: sudo

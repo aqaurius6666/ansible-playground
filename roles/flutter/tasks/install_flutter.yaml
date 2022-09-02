@@ -1,0 +1,16 @@
+---
+
+- name: check flutter tar existed
+  stat:
+    path: /tmp/flutter{{ flutter_version }}.tar.xz
+  register: flutter_tar
+  
+- name: download tar zip
+  command: curl -o /tmp/flutter{{ flutter_version }}.tar.xz https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_{{ flutter_version }}.tar.xz
+  when: not flutter_tar.stat.exists
+
+- name: remove old flutter
+  command: rm -rf {{ ansible_env.HOME }}/flutter
+
+- name: untar flutter
+  command: tar -C {{ ansible_env.HOME }} -xf /tmp/flutter{{ flutter_version }}.tar.xz

@@ -1,0 +1,11 @@
+--- 
+
+- name: check if minikube existed
+  command: minikube --help
+  register: minikube_check
+  ignore_errors: yes
+  no_log: true
+  failed_when: minikube_check.rc != 0
+
+- include_tasks: install.yaml
+  when: minikube_check.failed
