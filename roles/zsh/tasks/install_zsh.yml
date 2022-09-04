@@ -1,58 +1,63 @@
 ---
 
+- name: check if zsh existed
+  stat:
+    path: /usr/bin/zsh
+  register: zsh_check
+
+- name: install zsh
+  when: not zsh_check.stat.exists
+  block:
+    - name: install zsh Amazon
+      when: ansible_distribution == "Amazon"
+      yum:
+        name: zsh
+        state: present
+      become: true
+      become_method: sudo
+    - name: install zsh Ubuntu
+      when: ansible_distribution == "Ubuntu"
+      become: true
+      become_method: sudo
+      apt:
+        name: zsh
+        state: present
+    - name: set zsh as default shell
+      become: true
+      become_method: sudo
+      command: chsh -s /bin/zsh {{ ansible_env.USER }}
 - name: check oh-my-zsh
   stat:
-    path: "{{ ansible_env.HOME }}/.oh-my-zsh"
-  register: ohmyzsh_dir
-
-- name: check zsh
-  command: which zsh
-  register: zsh_check
-  ignore_errors: yes
-  no_log: true
-  failed_when: zsh_check.rc != 0
-
-- name: install zsh amz
-  become: true
-  become_method: sudo
-  register: zsh_install
-  command: yum install zsh -y
-  when: ansible_distribution == 'Amazon' and zsh_check.failed
-
-- name: install zsh ubuntu
-  become: true
-  become_method: sudo
-  register: zsh_install
-  command: apt-get install zsh -y
-  when: ansible_distribution == 'Ubuntu' and zsh_check.failed
-  
-- name: get oh-my-zsh installer
-  command: curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o /tmp/ohmyzsh-install.sh
-  when: not ohmyzsh_dir.stat.exists
-
-- name: change execute mode
-  become: true
-  become_method: sudo
-  command: chmod +x /tmp/ohmyzsh-install.sh
-  when: not ohmyzsh_dir.stat.exists
+    path: /home/{{ ansible_user }}/.oh-my-zsh
+  register: oh_my_zsh_check
 
 - name: install oh-my-zsh
-  command: /tmp/ohmyzsh-install.sh
-  when: not ohmyzsh_dir.stat.exists
+  when: not oh_my_zsh_check.stat.exists
+  block:
+    - name: check if ohmyzsh installer existed
+      stat:
+        path: /tmp/ohmyzsh_installer.sh
+      register: ohmyzsh_check
+    - name: download ohmyzsh installer
+      when: not ohmyzsh_check.stat.exists
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+        dest: /tmp/ohmyzsh_installer.sh
+        mode: 0755
+    - name: install ohmyzsh
+      command: /tmp/ohmyzsh_installer.sh
+    - name: install ohmyzsh plugins
+      git:
+        repo: https://github.com/zsh-users/{{ item }}.git 
+        dest: /home/{{ ansible_user }}/.oh-my-zsh/custom/plugins/{{ item }}
+        depth: 1
+      with_items: "{{ zsh_plugins }}"
+      ignore_errors: true
 
-- name: get .zshrc
-  command: curl {{ zshrc_url}} -o {{ ansible_env.HOME }}/.zshrc
+- name: get zshrc
+  get_url:
+    url: "{{ zshrc_url }}"
+    dest: "{{ ansible_env.HOME }}/.zshrc"
+    mode: 0644
 
-- name: remove ohmyzsh plugins
-  command: rm -rf {{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins/{{ item }}
-  with_items: "{{ zsh_plugins }}"
-
-- name: install ohmyzsh plugins
-  command: git clone https://github.com/zsh-users/{{ item }}.git {{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins/{{ item }} --depth=1
-  with_items: "{{ zsh_plugins }}"
-
-- name: set zsh as default shell
-  become: true
-  become_method: sudo
-  command: chsh -s /bin/zsh {{ ansible_env.USER }}
 

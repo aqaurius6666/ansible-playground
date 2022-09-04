@@ -36,6 +36,8 @@
     # - go
     # - nodejs
     # - docker
-    - kubernetes
+    # - kubernetes
+    # - go
+    - zsh
 
 

@@ -1,7 +1,0 @@
----
-- name: amz install docker
-  become: true
-  become_method: sudo
-  register: docker_install
-  command: amazon-linux-extras install docker -y
-

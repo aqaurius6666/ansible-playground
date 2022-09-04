@@ -1,13 +1,5 @@
 ---
-- include_tasks: pre_run.yml
 
 - include_tasks: install_docker.yml
-  name: install docker
-  when: docker_check.failed
 
-- include_tasks: install_docker_compose.yml
-  name: install docker compose
-  when: docker_compose_check.failed
-
-- include_tasks: after_install_docker.yml
 - include_tasks: install_docker_compose.yml

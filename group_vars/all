@@ -8,6 +8,7 @@ zsh_plugins:
 common_package: 
   - git
   - curl
+  - build-essential
 
 azure_pat_token: '{{ lookup("env", "AZURE_TOKEN") }}'
 azure_host: 10.8.0.6
@@ -16,7 +17,7 @@ agent_pool: Builder
 agent_name: "{{ ansible_host }}-agent"
 agent_binary: "vsts-agent-linux-x64-2.195.2"
 go_version: 1.19
-node_version: lts
+node_version: v16.17.0
 dart_version: 2.17.7
 flutter_version: 2.10.5-stable
 edge_version: 105.0.1343.25-1_amd64

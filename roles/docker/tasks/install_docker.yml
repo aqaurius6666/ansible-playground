@@ -1,5 +1,55 @@
 ---
-- when: hostvars[inventory_hostname].ansible_distribution == "Amazon"
-  include_tasks: install_docker_distro_amz.yml
-- when: hostvars[inventory_hostname].ansible_distribution != "Amazon"
-  include_tasks: install_docker_common.yml
+- name: check if docker existed
+  stat:
+    path: /usr/bin/docker
+  register: docker_stat
+
+- name: install docker
+  when: not docker_stat.stat.exists
+  block:
+    - name: install docker Ubuntu
+      when: hostvars[inventory_hostname].ansible_distribution == "Ubuntu" 
+      block:
+        - name: check if docker installer existed
+          stat:
+            path: /tmp/get-docker.sh
+          register: docker_installer_check
+        - name: download docker installer
+          command: curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
+          when: not docker_installer_check.stat.exists
+        - name: install docker
+          become: true
+          become_method: sudo
+          command: sh /tmp/get-docker.sh
+    - name: install docker Amazon
+      when: hostvars[inventory_hostname].ansible_distribution == "Amazon" 
+      block:
+        - name: install docker
+          become: true
+          become_method: sudo
+          command: amazon-linux-extras install docker -y
+
+- name: enable docker daemon
+  block:
+    - name: enable docker service
+      become: true
+      become_method: sudo
+      ansible.builtin.systemd:
+        name: docker
+        enabled: yes
+
+    - name: start docker service
+      become: true
+      become_method: sudo
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+
+    - name: add user to group docker
+      become: true
+      become_method: sudo
+      ignore_errors: true
+      user:
+        name: "{{ ansible_user_id }}"
+        groups:
+          - docker

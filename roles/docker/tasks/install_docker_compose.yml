@@ -1,16 +1,27 @@
 ---
 
-- name: create install_docker-compose.sh
-  template: 
-    src: install_docker-compose.sh.j2 
-    dest: /tmp/install_docker-compose.sh
+- name: check if docker-compose existed
+  stat:
+    path: /usr/local/bin/docker-compose
+  register: docker_compose_check
 
 - name: install docker-compose
-  become: true
-  become_method: sudo
-  command: bash /tmp/install_docker-compose.sh
-
-- name: chmod docker-compose
-  become: true
-  become_method: sudo
-  command: chmod +x /usr/local/bin/docker-compose
+  when: not docker_compose_check.stat.exists
+  block:
+    - name: check if docker-compose installer existed
+      stat:
+        path: /tmp/install_docker-compose.sh
+      register: docker_compose_installer_check
+    - name: create install_docker-compose.sh
+      template: 
+        src: install_docker-compose.sh.j2 
+        dest: /tmp/install_docker-compose.sh
+      when: not docker_compose_installer_check.stat.exists
+    - name: install docker-compose
+      become: true
+      become_method: sudo
+      command: bash /tmp/install_docker-compose.sh
+    - name: chmod docker-compose
+      become: true
+      become_method: sudo
+      command: chmod +x /usr/local/bin/docker-compose

@@ -1,18 +1,27 @@
 
 ---
-- name: check install existed
-  stat:
-    path: /tmp/node_installer.sh
-  register: node_installer
-  
-- name: download installer
-  command: curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh -o /tmp/node_installer.sh
-  register: install_node_installer
-  failed_when: install_node_installer.rc != 0
-  when:  not node_installer.stat.exists
 
-- name: run installer
-  command: bash /tmp/node_installer.sh
+- name: check if nvm existed
+  stat: 
+    path: "{{ ansible_env.HOME }}/.nvm"
+  register: nvm_check
 
-- name: change mode
-  command: chmod +x {{ ansible_env.HOME }}/.nvm/nvm.sh
+- name: install nvm
+  when: not nvm_check.stat.exists
+  block:
+    - name: check if nvm installer existed
+      stat: 
+        path: /tmp/nvm_installer.sh
+      register: nvm_installer_check
+    - name: download nvm installer
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh
+        dest: /tmp/nvm_installer.sh
+        mode: 0755
+      when: not nvm_installer_check.stat.exists
+    - name: install nvm
+      command:  /tmp/nvm_installer.sh
+    - name: change mode
+      file:
+        path: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+        mode: +x

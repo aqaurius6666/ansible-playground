@@ -1,22 +1,22 @@
 ---
- 
-- name: check go tar existed
-  stat:
-    path: /tmp/go{{ go_version }}.tar.gz
-  register: go_tar
+- name: check if go existed
+  stat: 
+    path: /usr/local/go/bin/go
+  register: go_check
 
-- name: download go tar
-  command: curl -L https://go.dev/dl/go{{ go_version }}.linux-amd64.tar.gz -o /tmp/go{{ go_version }}.tar.gz
-  register: install_go_tar
-  failed_when: install_go_tar.rc != 0
-  when: go_version is defined and not go_tar.stat.exists
+- name: install go
+  when: not go_check.stat.exists
+  block:
+    - name: check go tar existed
+      stat:
+        path: /tmp/go{{ go_version }}.tar.gz
+      register: go_tar
+    - name: download go tar
+      command: curl -L https://go.dev/dl/go{{ go_version }}.linux-amd64.tar.gz -o /tmp/go{{ go_version }}.tar.gz
+      register: install_go_tar
+      when: go_version is defined and not go_tar.stat.exists
 
-- name: remove old go
-  command: rm -rf /usr/local/go
-  become: true
-  become_method: sudo
-
-- name: untar go
-  command: tar -C /usr/local -xzf /tmp/go{{ go_version }}.tar.gz
-  # become: true
-  # become_method: sudo
+    - name: untar go
+      command: tar -C /usr/local -xzf /tmp/go{{ go_version }}.tar.gz
+      become: true
+      become_method: sudo

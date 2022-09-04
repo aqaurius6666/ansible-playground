@@ -7,3 +7,8 @@ azure:
 start-minikube:
 	@ minikube start --memory=2g --cpus=2
 
+amz:
+	@ ansible-playbook --private-key ${HOME}/.ssh/aqaurius6666-key.pem -i hosts amz.yml
+
+local:
+	@ ansible-playbook -i hosts local.yml

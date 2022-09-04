@@ -1,0 +1,15 @@
+---
+- name: install local
+  hosts: local
+  roles:
+    # - edge
+    - common
+    # - zsh
+    # - go
+    # - nodejs
+    # - docker
+    # - kubernetes
+    # - go
+    # - zsh
+
+

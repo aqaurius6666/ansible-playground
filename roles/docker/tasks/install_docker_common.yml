@@ -1,8 +1,0 @@
----
-
-- name: common install get-docker.sh
-  command: curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
-- name: common install docker
-  become: true
-  become_method: sudo
-  command: sh /tmp/get-docker.sh
