@@ -1,0 +1,30 @@
+---
+- name: check if aws-cli existed
+  stat:
+    path: /usr/local/bin/aws
+  register: aws_cli
+
+- name: install aws-cli
+  when: aws_cli.stat.exists == False
+  block:
+    - name: check if awszip existed
+      stat:
+        path: /tmp/awscliv2.zip
+      register: awszip
+    - name: download aws-cli
+      get_url:
+        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /tmp/awscliv2.zip
+      when: not awszip.stat.exists
+    - name: unzip aws-cli
+      unarchive:
+        src: /tmp/awscliv2.zip
+        dest: /tmp
+        remote_src: yes
+    - name: install aws-cli
+      shell: /tmp/aws/install
+      become: yes
+      become_method: sudo
+      args:
+        creates: /usr/local/bin/aws
+

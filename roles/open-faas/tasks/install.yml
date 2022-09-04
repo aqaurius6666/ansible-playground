@@ -1,0 +1,24 @@
+---
+
+- name: check if faas-cli existed
+  stat:
+    path: /usr/local/bin/faas
+  register: faas_cli_check
+
+- name: install faas-cli
+  when: faas_cli_check.stat.exists == False
+  block:
+    - name: check if faas-cli installer existed
+      stat:
+        path: /tmp/faas-cli.sh
+      register: faas_cli_installer_check
+    - name: download faas-cli installer
+      when: faas_cli_installer_check.stat.exists == False
+      get_url:
+        url: https://cli.openfaas.com
+        dest: /tmp/faas-cli.sh
+        mode: 0755
+    - name: install faas-cli
+      command: bash /tmp/faas-cli.sh
+      become: true
+      become_method: sudo

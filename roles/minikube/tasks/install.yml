@@ -1,0 +1,23 @@
+---
+- name: check if minikube existed
+  stat:
+    path: /usr/local/bin/minikube
+  register: minikube_check
+
+- name: install minikube
+  when: not minikube_check.stat.exists
+  block:
+    - name: check if minikube installer existed
+      stat:
+        path: /tmp/minikube_installer
+      register: minikube_installer_check
+    - name: download minikube installer
+      when: not minikube_installer_check.stat.exists
+      get_url:
+        url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+        dest: /tmp/minikube_installer
+        mode: 0755      
+    - name: install minikube
+      shell: install /tmp/minikube_installer /usr/local/bin/minikube
+      become: true
+      become_method: sudo

@@ -3,7 +3,10 @@
   hosts: local
   roles:
     # - edge
-    - common
+    # - common
+    # - minikube
+    # - open-faas
+    - aws
     # - zsh
     # - go
     # - nodejs
