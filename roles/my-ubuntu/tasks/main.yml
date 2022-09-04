@@ -1,0 +1,49 @@
+---
+- name: collect fact
+  package_facts:
+    manager: apt
+
+- ansible.builtin.include_role:
+    name: common
+    tasks_from: main.yml
+  
+- name: install necessary
+  become: true
+  become_method: sudo
+  apt:
+    name: "{{ item }}"
+    state: present
+    # update_cache: yes
+  with_items:
+    - python3-pydrive
+
+- ansible.builtin.include_role:
+    name: zsh
+    tasks_from: main.yml
+
+- ansible.builtin.include_tasks: install_bamboo.yml
+
+- ansible.builtin.include_role:
+    name: edge
+    tasks_from: main.yml
+  when: '"microsoft-edge-stable" not in ansible_facts.packages'
+
+- ansible.builtin.include_role:
+    name: vscode
+    tasks_from: main.yml
+
+- ansible.builtin.include_role:
+    name: docker
+    tasks_from: main.yml
+
+- ansible.builtin.include_role: 
+    name: go
+    tasks_from: main.yml
+
+- ansible.builtin.include_role: 
+    name: nodejs
+    tasks_from: main.yml
+
+- ansible.builtin.include_role: 
+    name: kubernetes
+    tasks_from: main.yml

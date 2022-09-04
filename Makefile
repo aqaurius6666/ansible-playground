@@ -13,3 +13,7 @@ amz:
 local:
 	@ echo "Enter sudo password !!!"
 	@ ansible-playbook -i hosts local.yml --ask-become-pass
+
+my-ubuntu:
+	@ echo "Enter sudo password !!!"
+	@ ansible-playbook -i hosts my-ubuntu.yml --ask-become-pass

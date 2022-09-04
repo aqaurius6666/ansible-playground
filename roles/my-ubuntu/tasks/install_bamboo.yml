@@ -1,0 +1,49 @@
+---
+- name: install ibus bamboo
+  when: '"ibus-bamboo" not in ansible_facts.packages'
+  block:
+    - name: add apt repository
+      become: true
+      become_method: sudo
+      apt_repository:
+        repo: ppa:bamboo-engine/ibus-bamboo
+        state: present
+        update_cache: yes
+
+    - name: install ibus bamboo
+      apt:
+        name: ibus-bamboo
+        state: present
+        update_cache: yes
+        install_recommends: yes
+      become: true
+      become_method: sudo
+
+- name: install japanese
+  when: '"ibus-mozc" not in ansible_facts.packages'
+  block:
+    - name: install ja apt
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      become: true
+      become_method: sudo
+      with_items:
+        - language-pack-ja 
+        - language-pack-gnome-ja
+        - language-pack-ja-base
+        - language-pack-gnome-ja-base
+        - ibus-mozc
+
+
+- name: restart ibus
+  shell: ibus restart
+  ignore_errors: true
+  register: ibus_restart
+- name: restart ibus-daemon
+  shell: ibus-daemon --xim -d -r
+  when: ibus_restart.rc != 0
+- name: restart ibus 2
+  shell: ibus restart
+  when: ibus_restart.rc != 0

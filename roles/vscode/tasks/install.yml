@@ -1,0 +1,25 @@
+---
+
+- name: check if vscode existed
+  stat: 
+    path: /usr/bin/code
+  register: code_check
+
+- name: install vscode
+  when: not code_check.stat.exists
+  block:
+    - name: check if vscode deb existed
+      stat: 
+        path: /tmp/vscode.deb
+      register: vscode_check
+    - name: download vscode deb
+      when: not vscode_check.stat.exists
+      command: curl -L https://code.visualstudio.com/sha/download\?build\=stable\&os\=linux-deb-x64 -o /tmp/vscode.deb
+    - name: install vscode deb
+      become: true
+      become_method: sudo
+      apt:
+        deb: /tmp/vscode.deb
+        state: present
+        update_cache: yes
+        cache_valid_time: 3600
