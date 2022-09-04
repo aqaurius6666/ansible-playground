@@ -1,15 +1,24 @@
 ---
 
-- name: download helm install
-  command: curl -fsSL -o /tmp/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-  register: helm_download
+- name: check helm existed
+  stat:
+    path: /usr/local/bin/helm
+  register: helm_check
 
-- name: change execute mode
-  become: true
-  become_method: sudo
-  command: chmod +x /tmp/get_helm.sh
-  when: helm_download.rc == 0
-
-- name: install helm
-  command: /tmp/get_helm.sh
-  when: helm_download.rc == 0
+- name: install helm if not existed
+  block:
+    - name: check if installer existed
+      stat:
+        path: /tmp/get_helm.sh
+      register: helm_installer_check
+    - name: download helm installer
+      command: curl -fsSL -o /tmp/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+      when: not helm_installer_check.stat.exists
+    - name: change execute permission
+      file:
+        path: /tmp/get_helm.sh
+        mode: 0777
+    - name: install helm
+      command: /tmp/get_helm.sh
+  when: not helm_check.stat.exists
+      

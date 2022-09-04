@@ -1,16 +1,31 @@
 ---
 
-- name: get stable version
-  command: curl -L -s https://dl.k8s.io/release/stable.txt
-  register: kubectl_stable_version
+- name: check kubectl existed
+  stat:
+    path: /usr/local/bin/kubectl
+  register: kubectl_check
 
-- name: download kubectl binary
-  command: curl -LO "https://dl.k8s.io/release/{{ kubectl_stable_version.stdout }}/bin/linux/amd64/kubectl" -o /tmp/kubectl
-  when: kubectl_stable_version.rc == 0
-  register: kubectl_download
+- name: install kubectl if not existed
+  block:
+    - name: check if kubectl installer existed
+      stat:
+        path: /tmp/kubectl
+      register: kubectl_installer_check
+    - name: get stable version
+      command: curl -L -s https://dl.k8s.io/release/stable.txt
+      no_log: true
+      register: kubectl_stable_version
+      when: not kubectl_installer_check.stat.exists
+    - name: download kubectl binary
+      command: curl -L "https://dl.k8s.io/release/{{ kubectl_stable_version.stdout }}/bin/linux/amd64/kubectl" -o /tmp/kubectl
+      when: not kubectl_installer_check.stat.exists and kubectl_stable_version.rc == 0
+    - name: install kubectl
+      become: true
+      become_method: sudo
+      command: install -o root -g root -m 0777 /tmp/kubectl /usr/local/bin/kubectl
+  when: not kubectl_check.stat.exists
+  any_errors_fatal: true
 
-- name: install kubectl
-  become: true
-  become_method: sudo
-  command: install -o root -g root -m 0777 kubectl /usr/local/bin/kubectl
-  when: kubectl_download.rc == 0
+
+
+
