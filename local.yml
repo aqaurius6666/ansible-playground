@@ -2,6 +2,6 @@
 - name: install local
   hosts: local
   roles:
-    - my-ubuntu
+    - argo-cli
 
 

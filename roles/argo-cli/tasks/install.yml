@@ -1,0 +1,29 @@
+---
+
+- name: check if argo existed
+  ansible.builtin.stat:
+    path: /usr/local/bin/argo
+  register: argo
+
+- name: install argo Ubuntu
+  when: not argo.stat.exists and hostvars[inventory_hostname].ansible_distribution == "Ubuntu" 
+  block:
+    - name: check if argo zip existed
+      ansible.builtin.stat:
+        path: /tmp/argo.gz
+      register: argo_zip
+    - name: download argo zip
+      when: not argo_zip.stat.exists
+      get_url:
+        url: https://github.com/argoproj/argo-workflows/releases/download/v3.4.0-rc3/argo-linux-amd64.gz
+        dest: /tmp/argo.gz
+    - name: unzip argo
+      ansible.builtin.command: gunzip /tmp/argo.gz -f
+    - name: change mode
+      ansible.builtin.file:
+        path: /tmp/argo
+        mode: +x
+    - name: move argo
+      command: mv /tmp/argo /usr/local/bin/argo
+      become: true
+      become_method: sudo

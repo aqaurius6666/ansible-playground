@@ -31,13 +31,13 @@
 #   hosts: localhost
   roles:
     # - edge
-    # - common
+    - common
     # - zsh
     # - go
     # - nodejs
     # - docker
     # - kubernetes
     # - go
-    - zsh
+    # - zsh
 
 

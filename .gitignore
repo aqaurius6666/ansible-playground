@@ -1,3 +1,4 @@
 .vscode
 .env
 roles/vpn/templates/ansible.conf.j2
+.vscode

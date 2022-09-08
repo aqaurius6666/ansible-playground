@@ -9,6 +9,7 @@ common_package:
   - git
   - curl
   - build-essential
+  - protobuf-compiler
 
 azure_pat_token: '{{ lookup("env", "AZURE_TOKEN") }}'
 azure_host: 10.8.0.6

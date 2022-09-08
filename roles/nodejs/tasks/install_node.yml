@@ -10,7 +10,7 @@
   when: node_version_check.failed 
   args:
     executable: /bin/bash
-- name: set node {{ node_version }} as default
+- name: Set node {{ node_version }} as default
   shell: "source {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm alias default {{ node_version }}"
   when: node_version_check.failed
   args:

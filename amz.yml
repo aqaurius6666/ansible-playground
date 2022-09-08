@@ -1,7 +1,5 @@
-- name: install amz
+- name: Install amz
   hosts: aws
   roles:
     # - zsh
     - nodejs
-
-
