@@ -1,5 +1,0 @@
-[aws]
-13.229.210.144 ansible_user=ubuntu
-
-[local]
-localhost ansible_connection=local ansible_user=aqaurius6666

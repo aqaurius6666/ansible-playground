@@ -1,0 +1,8 @@
+---
+- name: install local
+  hosts: my-vps
+  roles:
+    - common
+    - docker
+
+
