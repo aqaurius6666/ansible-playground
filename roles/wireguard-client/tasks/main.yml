@@ -1,0 +1,4 @@
+---
+- ansible.builtin.include_tasks: install_wireguard.yml
+
+- ansible.builtin.include_tasks: connect.yml

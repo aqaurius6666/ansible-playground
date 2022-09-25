@@ -14,8 +14,8 @@
   no_log: true
   failed_when: flutter_check.rc != 0
 
-- include_tasks: install_dart.yaml
+- include_tasks: install_dart.yml
   when: dart_check.failed
 
-- include_tasks: install_flutter.yaml
+- include_tasks: install_flutter.yml
   when: flutter_check.failed

@@ -1,0 +1,34 @@
+---
+
+- name: copy wg0.conf
+  register: wg0_conf
+  template:
+    mode: 0600
+    src: wg0.conf.j2
+    dest: /etc/wireguard/wg0.conf
+  become: true
+  become_method: sudo
+
+- name: enable wg-quick@wg0
+  systemd:
+    name: wg-quick@wg0
+    enabled: yes
+  become: true
+  become_method: sudo
+  when: wg0_conf.failed == false
+
+- name: stop wg-quick@wg0
+  systemd:
+    name: wg-quick@wg0
+    state: stopped
+  become: true
+  become_method: sudo
+  when: wg0_conf.failed == false
+
+- name: start wg-quick@wg0
+  systemd:
+    name: wg-quick@wg0
+    state: started
+  become: true
+  become_method: sudo
+  when: wg0_conf.failed == false

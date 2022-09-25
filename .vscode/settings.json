@@ -1,11 +1,13 @@
 {
     "files.associations": {
-        "*.yml": "ansible"
+        "*.yml": "ansible",
+        "*.yaml" : "ansible"
     },
     "[ansible]": {
         "gitlens.codeLens.scopes": [
             "document"
         ],
+        
         "editor.detectIndentation": true,
         "editor.insertSpaces": true,
         "editor.tabSize": 2,
@@ -15,4 +17,5 @@
             "strings": true
         }
     },
+    "ansible.ansibleLint.enabled" : false
 }

@@ -4,3 +4,4 @@ roles/vpn/templates/ansible.conf.j2
 .vscode
 .own.yaml
 hosts
+wg0.conf.j2

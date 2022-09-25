@@ -2,4 +2,4 @@
   hosts: aws
   roles:
     # - zsh
-    - nodejs
+    - wireguard-client
