@@ -1,0 +1,3 @@
+---
+
+- ansible.builtin.include_tasks: install_microk8s.yml

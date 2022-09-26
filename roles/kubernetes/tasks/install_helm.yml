@@ -20,5 +20,7 @@
         mode: 0777
     - name: install helm
       command: /tmp/get_helm.sh
+      become: yes
+      become_method: sudo
   when: not helm_check.stat.exists
       

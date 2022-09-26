@@ -46,13 +46,15 @@
         mode: 0755
     - name: install ohmyzsh
       command: /tmp/ohmyzsh_installer.sh
-    - name: install ohmyzsh plugins
-      git:
-        repo: https://github.com/zsh-users/{{ item }}.git 
-        dest: /home/{{ ansible_user }}/.oh-my-zsh/custom/plugins/{{ item }}
-        depth: 1
-      with_items: "{{ zsh_plugins }}"
-      ignore_errors: true
+      become: yes
+      become_method: sudo
+- name: install ohmyzsh plugins
+  git:
+    repo: https://github.com/zsh-users/{{ item }}.git 
+    dest: /home/{{ ansible_user }}/.oh-my-zsh/custom/plugins/{{ item }}
+    depth: 1
+  with_items: "{{ zsh_plugins }}"
+  ignore_errors: true
 
 - name: get zshrc
   get_url:

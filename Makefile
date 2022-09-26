@@ -2,7 +2,7 @@ include .env
 export
 
 azure:
-	@ ansible-playbook -i hosts azure.yml 
+	@ ansible-playbook -i hosts new_azure_agent.yml --ask-become-pass
 
 start-minikube:
 	@ minikube start --memory=2g --cpus=2 --driver=docker

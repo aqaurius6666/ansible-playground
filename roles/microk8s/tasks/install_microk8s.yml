@@ -1,0 +1,10 @@
+---
+
+- name: install using snap
+  community.general.snap:
+    name: microk8s
+    classic: yes
+    state: present
+  become: yes
+  become_method: sudo
+  when: ansible_distribution == "Ubuntu"
