@@ -1,5 +1,6 @@
 - name: Install amz
   hosts: aws
   roles:
-    # - zsh
+    # - common
     - wireguard-client
+    # - docker

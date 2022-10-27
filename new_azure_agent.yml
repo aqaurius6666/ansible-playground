@@ -2,21 +2,21 @@
 #   hosts: azure
 #   roles:
 #     - common
-#     - docker
-#     - kubernetes
-#     - zsh
+    # - docker
+    # - kubernetes
+    # - zsh
 
 # - name: install wireguard
 #   hosts: azure
 #   roles:
 #     - wireguard-client
 
-- name: install microk8s
-  hosts: azure
-  roles:
-    - microk8s
-
-# - name: setup agent
+# - name: install microk8s
 #   hosts: azure
 #   roles:
-#     - azure-agent
+#     - microk8s
+
+- name: setup agent
+  hosts: azure
+  roles:
+    - azure-agent
