@@ -1,0 +1,28 @@
+
+- name: check terraform version
+  stat:
+    path: /usr/local/bin/terraform
+  register: terraform_stat
+  
+
+- name: install terraform
+  block:
+    - name: check download terraform zip
+      stat:
+        path: /tmp/terraform.zip
+      register: terraform_zip_stat
+    - name: download terraform
+      get_url:
+        url: https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_linux_amd64.zip
+        dest: /tmp/terraform.zip
+        mode: 0755
+      when: terraform_zip_stat.stat.exists == false
+    - name: unzip terraform
+      become: yes
+      become_method: sudo
+      unarchive:
+        src: /tmp/terraform.zip
+        dest: /usr/local/bin
+        remote_src: yes
+        mode: 0755
+  when: terraform_stat.stat.exists == false and hostvars[inventory_hostname].ansible_distribution == "Ubuntu" 
